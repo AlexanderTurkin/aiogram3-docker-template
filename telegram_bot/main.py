@@ -10,9 +10,11 @@ from aiogram.fsm.storage.redis import DefaultKeyBuilder, RedisStorage
 from aiohttp import web
 from redis.asyncio import Redis
 
-from telegram_bot import utils, handlers, web_handlers
-from telegram_bot.data import config
-from telegram_bot.middlewares import StructLoggingMiddleware
+import handlers
+import utils
+import web_handlers
+from data import config
+from middlewares import StructLoggingMiddleware
 
 if TYPE_CHECKING:
     import asyncpg as asyncpg
@@ -74,7 +76,7 @@ async def close_db_connections(dp: Dispatcher) -> None:
         db_pool: asyncpg.Pool = dp["db_pool"]
         await db_pool.close()
     if "cache_pool" in dp.workflow_data:
-        cache_pool: redis.asyncio.Redis = dp["cache_pool"]  # type: ignore[type-arg]
+        cache_pool: redis.asyncio.Redis = dp["cache_pool"]
         await cache_pool.close()
 
 
@@ -113,10 +115,10 @@ async def aiohttp_on_startup(app: web.Application) -> None:
 
 async def aiohttp_on_shutdown(app: web.Application) -> None:
     dp: Dispatcher = app["dp"]
-    for i in [app, *app._subapps]:  # noqa: SLF001 # dirty
+    for i in [app, *app._subapps]:
         if "scheduler" in i:
             scheduler: aiojobs.Scheduler = i["scheduler"]
-            scheduler._closed = True  # noqa: SLF001
+            scheduler._closed = True
             while scheduler.pending_count != 0:
                 dp["aiogram_logger"].info(
                     f"Waiting for {scheduler.pending_count} tasks to complete",
@@ -167,7 +169,7 @@ async def aiogram_on_shutdown_polling(dispatcher: Dispatcher, bot: Bot) -> None:
     dispatcher["aiogram_logger"].info("Stopped polling")
 
 
-async def setup_aiohttp_app(  # noqa: RUF029
+async def setup_aiohttp_app(
     bot: Bot,
     dp: Dispatcher,
 ) -> web.Application:

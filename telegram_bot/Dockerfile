@@ -10,7 +10,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     POETRY_CACHE_DIR="/tmp/poetry_cache" \
     POETRY_VERSION=1.7.0
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/bot
 COPY . .
 
 RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
@@ -23,4 +23,4 @@ RUN chown -R appuser:appuser .
 
 USER appuser
 
-CMD ["python", "-m", "telegram_bot"]
+CMD ["python", "main.py"]

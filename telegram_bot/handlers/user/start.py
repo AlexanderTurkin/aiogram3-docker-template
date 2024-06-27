@@ -1,6 +1,6 @@
+import states
 from aiogram import html, types
 from aiogram.fsm.context import FSMContext
-from telegram_bot import states
 
 
 async def start(msg: types.Message, state: FSMContext) -> None:

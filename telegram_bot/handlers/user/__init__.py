@@ -1,9 +1,8 @@
 from aiogram import Router
 from aiogram.filters import CommandStart, Command
 
-
 from . import start, ping
-from ...filters import ChatTypeFilter
+from filters import ChatTypeFilter
 
 
 def prepare_router() -> Router:

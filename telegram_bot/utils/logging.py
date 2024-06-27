@@ -1,10 +1,9 @@
 import logging
 import sys
 
+import models
 import structlog
-
-from telegram_bot import models
-from telegram_bot.data import config
+from data import config
 
 
 def setup_logger() -> structlog.typing.FilteringBoundLogger:

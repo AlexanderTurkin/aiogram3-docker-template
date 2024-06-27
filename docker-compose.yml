@@ -1,7 +1,6 @@
 services:
   bot:
-    build:
-      dockerfile: Dockerfile
+    build: ./telegram_bot
     container_name: telegram_bot
     restart: always
     env_file:
@@ -11,6 +10,14 @@ services:
       - redis
     networks:
       - app
+
+  fastapi:
+      build: ./fastapi
+      command: uvicorn main:app --reload --host 0.0.0.0 --port 8000
+      ports:
+        - 8000:8000
+      networks:
+        - app
 
   postgres:
     image: postgres:14-alpine
@@ -55,6 +62,8 @@ services:
     restart: always
     ports:
       - 8080:8080
+    networks:
+      - app
 
   redis:
     image: redis:7-alpine
@@ -68,6 +77,31 @@ services:
       - app
     volumes:
       - redis-data:/bitnami/redis/data
+
+  nginx:
+    build: .
+    image: umputun/nginx-le:latest
+    hostname: nginx
+    restart: always
+    container_name: nginx
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+    networks:
+      - app
+    volumes:
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/nginx_config.conf:/etc/nginx/service.conf
+    ports:
+      - "80:80"
+      - "443:443"
+
+    environment:
+      - LETSENCRYPT=true
+      - LE_EMAIL=test@mail.ru
+      - LE_FQDN=${MAIN_WEBHOOK_ADDRESS}
 
 networks:
   app:
