@@ -5,7 +5,7 @@ services:
     container_name: telegram_bot
     restart: always
     env_file:
-      - .env.local
+      - .env
     depends_on:
       - pgbouncer
       - redis
@@ -17,7 +17,7 @@ services:
     container_name: postgres
     restart: always
     env_file:
-      - .env.local
+      - .env
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASS}
@@ -33,7 +33,7 @@ services:
     container_name: pgbouncer
     restart: always
     env_file:
-      - .env.local
+      - .env
     environment:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASS}
@@ -61,7 +61,7 @@ services:
     container_name: redis
     restart: always
     env_file:
-      - .env.local
+      - .env
     ports:
       - ${REDIS_PORT}:${REDIS_PORT}
     networks:
